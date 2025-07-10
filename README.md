@@ -1,67 +1,78 @@
-# TikTok-Style Video Recommendation System (PySpark + ALS)
+# 🎵 TikTok-Style Recommendation System (Collaborative + Content-Based Filtering)
 
-This project demonstrates a simplified version of the TikTok recommendation algorithm using **Apache Spark's ALS (Alternating Least Squares)** collaborative filtering model. It predicts video recommendations based on user interaction history such as watch time, likes, and skips.
+This project implements a simplified version of TikTok’s recommendation algorithm using **PySpark's ALS (Alternating Least Squares)** for collaborative filtering, and **cosine similarity** for content-based filtering.
 
-## 🔍 Features
+Inspired by the conceptual workings of TikTok’s algorithm shared publicly, this repo brings those concepts into code. The system predicts and recommends videos based on user interaction history (likes, watch time, comments) and video content attributes (duration, text, audio).
 
-- Collaborative Filtering using PySpark's MLlib
-- Matrix factorization via ALS
-- Evaluation with RMSE
-- Scalable for large datasets
-- Sample interaction data provided
 
-## 📁 Dataset Format
+## 🧠 Overview
 
-The dataset used is a synthetic interaction log named `tiktok_data.txt`. Each line follows the format:
+TikTok’s recommendation system is a blend of:
 
-```
+- **Collaborative Filtering** — Suggests videos based on user similarity
+- **Content-Based Filtering** — Suggests videos based on video feature similarity
 
-user\_id::video\_id::interaction\_score
+This project recreates both strategies and combines them to build an ensemble recommendation pipeline.
 
-```
+---
 
-Example:
-```
-
-1::101::4.5
-2::103::3.0
-3::105::4.0
-
-````
-
-The `interaction_score` can represent a combination of likes, watch time, comments, etc., mapped to a numerical scale.
-
-## 🛠️ Technologies Used
+## ⚙️ Tech Stack
 
 - Python 3.8+
-- Apache Spark (PySpark)
+- PySpark
 - Spark MLlib
+- scikit-learn
+- pandas
 - JDK 11+
-- Pandas (for content-based filtering extension)
-- scikit-learn (for cosine similarity)
+
+---
+
+## 📁 Data Format
+
+### `tiktok_data.txt` (Collaborative Filtering)
+Format: `user_id::video_id::interaction_score`
+
+```txt
+1::101::4.5
+1::102::5.0
+2::103::3.0
+````
+
+### `video_features.csv` (Content-Based Filtering)
+
+Format: A table with numerical features of videos
+
+```csv
+video_id,length,audio_energy,text_score
+101,15,0.8,0.9
+102,30,0.6,0.7
+...
+```
+
+---
+
+## 🔍 How It Works
+
+### Collaborative Filtering
+
+* Read user-video interaction data
+* Use Spark’s ALS algorithm to train a matrix factorization model
+* Predict ratings for unseen videos
+* Generate top-N recommendations per user
+
+### Content-Based Filtering
+
+* Use cosine similarity on video feature vectors
+* Recommend videos with similar attributes to those previously liked by the user
+
+---
 
 
+#
 
-## 🧠 Model Overview
+## 🔮 Future Work
 
-The ALS algorithm learns latent features for users and items, using implicit or explicit feedback. The model:
-
-* Splits data into train/test
-* Trains ALS using user/video/interaction triples
-* Evaluates using RMSE
-* Outputs top-20 video recommendations per user
-
-
-
-## 🚀 Future Enhancements
-
-* Add content-based filtering using cosine similarity
-* Build a hybrid recommender (collaborative + content-based)
-* Visualize recommendations
-* Deploy via Streamlit or Flask
-
-## 🙌 Acknowledgements
-
-Inspired by [The Clever Programmer](https://thecleverprogrammer.com/) blog post on TikTok algorithm implementation.
-
-
+* Add hybrid recommender (ALS + content similarity)
+* Incorporate session-based behaviors (watch time patterns)
+* Build frontend interface with Streamlit
+* Save/load models and recommendations
